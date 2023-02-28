@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.main_div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+}
+
+#pagination .active {
+  background-color: teal;
+  color: white;
+  border-color: teal;
+}
+
+.page-item {
+  border: 1px solid #eeeeee;
+  padding: 0.1em 0.8em;
+}
+
+.page-item:hover {
+  cursor: pointer;
+}
