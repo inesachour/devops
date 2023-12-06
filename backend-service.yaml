@@ -12,6 +12,8 @@ spec:
     - name: "5000"
       port: 5000
       targetPort: 5000
+      nodePort: 31000
+  type: NodePort
   selector:
     io.kompose.service: backend
 status:
