@@ -22,7 +22,7 @@ const EditUpdateUser = ({ userData, getUsersData }) => {
   const UpdateData = (values) => {
     const { _id, name, email, designation } = values;
     axios
-      .patch(`http://backend.default.svc.cluster.local:5000/update/${_id}`, {
+      .patch(`http://backend:5000/update/${_id}`, {
         name,
         email,
         designation,
