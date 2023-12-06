@@ -22,7 +22,7 @@ const EditUpdateUser = ({ userData, getUsersData }) => {
   const UpdateData = (values) => {
     const { _id, name, email, designation } = values;
     axios
-      .patch(`http://backend:31000/update/${_id}`, {
+      .patch(`http://backend:5000/update/${_id}`, {
         name,
         email,
         designation,
