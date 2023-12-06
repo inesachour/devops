@@ -26,7 +26,7 @@ const Dashboard = () => {
   //get users Data
   const getUsersData = () => {
     axios
-      .get("http://localhost:31000/users")
+      .get("http://backend:31000/users")
       .then((res) => {
         setEmployeeData(res.data.data);
         setLoading(false);
