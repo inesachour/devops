@@ -6,7 +6,7 @@ pipeline {
      }
     
     stages {
-        stage('Checkout') {
+        /*stage('Checkout') {
             steps {
                 git 'https://github.com/inesachour/devops.git'
             }
@@ -60,6 +60,28 @@ pipeline {
                     
                 }
             }
+        }*/
+        
+        /*stage('Install Azure CLI') {
+            steps {
+                script {
+                    // Install Azure CLI inside the Jenkins container
+                    sh 'curl -sL https://aka.ms/InstallAzureCLIDeb | bash'
+                }
+            }
+        }*/
+        
+        stage('Login to Azure with AzureServicePrincipal') {
+            steps {
+                script {
+                    withCredentials([azureServicePrincipal(credentialsId: 'azure_service_principal', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
+                            sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
+                            sh 'az account set -s $AZURE_SUBSCRIPTION_ID'
+                            sh 'terraform init'
+
+                    }
+                }
+            }
         }
         
         stage('Terraform') {
@@ -68,18 +90,32 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'azure_credentials',passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
                             sh 'az login -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET'
                             sh 'terraform plan'
-                            sh 'terraform apply --auto-approve tfplan'
+                            sh 'terraform apply --auto-approve'
                         }
                 }
             }
         }
+        
+        
 
-        /*stage('Deploy') {
+        stage('Deploy to Kubernetes - Backend') {
             steps {
-                // Étape pour déployer les conteneurs sur Kubernetes
                 script {
-                    //sh 'kubectl apply -f kubernetes/deployment-backend.yaml'
-                    //sh 'kubectl apply -f kubernetes/deployment-frontend.yaml'
+                    withCredentials([azureServicePrincipal(credentialsId: 'azure_service_principal', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
+                        sh 'az aks install-cli'
+                        sh 'az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --overwrite-existing'
+                        sh 'kubectl apply -f backend-deployment.yaml'
+                        sh 'kubectl apply -f backend-service.yaml'
+                    }
+                }
+            }
+        }
+
+        /*stage('Deploy to Kubernetes - Frontend') {
+            steps {
+                script {
+                    sh 'kubectl apply -f frontend-deployment.yaml'
+                    sh 'kubectl apply -f frontend-service.yaml'
                 }
             }
         }*/
