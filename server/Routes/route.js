@@ -1,8 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const users = require("../Models/userSchema");
+const promClient = require('prom-client');
 
 //####################### TO ADD NEW USER ##########################
+
+promClient.collectDefaultMetrics();
+
+// Metrics endpoint for Prometheus to scrape
+router.get('/metrics', async (req, res) => {
+  try {
+      const metrics = await promClient.register.metrics();
+      res.set('Content-Type', promClient.register.contentType);
+      res.end(metrics);
+  } catch (error) {
+      console.error('Error generating metrics:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
 
 router.post("/create-user", async (req, res) => {
   const { name, email, designation } = req.body;

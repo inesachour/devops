@@ -95,7 +95,7 @@ pipeline {
                 script {
                     withCredentials([azureServicePrincipal(credentialsId: 'azure_service_principal', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
                         //sh 'az aks install-cli'
-                        sh 'az aks get-credentials --resource-group "devops_project_rg" --name "terraform-aks" --overwrite-existing'
+                        sh 'az aks get-credentials --resource-group "devops_project_rg" --name "terraform-aks"'
                         sh 'kubectl apply -f backend-deployment.yaml'
                         sh 'kubectl apply -f backend-service.yaml'
 
@@ -110,7 +110,7 @@ pipeline {
                     withCredentials([azureServicePrincipal(credentialsId: 'azure_service_principal', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
                         //sh 'az aks install-cli'
                         sh 'az aks get-credentials --resource-group "devops_project_rg" --name "terraform-aks" --overwrite-existing'
-                        sh 'kubectl delete service frontend && kubectl delete deployment frontend'
+                        //sh 'kubectl delete service frontend && kubectl delete deployment frontend'
                         sh 'kubectl apply -f frontend-deployment.yaml'
                         sh 'kubectl apply -f frontend-service.yaml'
                     }
