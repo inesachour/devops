@@ -22,7 +22,7 @@ const EditUpdateUser = ({ userData, getUsersData }) => {
   const UpdateData = (values) => {
     const { _id, name, email, designation } = values;
     axios
-      .patch(`http://20.67.190.237:5000/update/${_id}`, {
+      .patch(`http://20.223.24.203:5000/update/${_id}`, {
         name,
         email,
         designation,
