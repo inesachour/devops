@@ -17,7 +17,7 @@ const DeleteUser = ({ userId, getUsersData }) => {
   //delete user function call
   const confirmDelete = () => {
     axios
-      .delete(`http://backend:5000/delete/${userId}`)
+      .delete(`http://20.67.190.237:5000/delete/${userId}`)
       .then((res) => {
         getUsersData();
         toast({
