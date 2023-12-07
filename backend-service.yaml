@@ -10,4 +10,4 @@ spec:
   type: LoadBalancer
   selector:
     app: backend
-  oadBalancerIP: "20.82.224.110"
+  loadBalancerIP: "20.82.224.110"
