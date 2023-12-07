@@ -8,5 +8,6 @@ spec:
       port: 5000
       targetPort: 5000
   type: LoadBalancer
+  loadBalancerIP: 20.67.190.237
   selector:
     app: backend
