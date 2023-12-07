@@ -6,7 +6,7 @@ pipeline {
      }
     
     stages {
-        /*stage('Checkout') {
+        stage('Checkout') {
             steps {
                 git 'https://github.com/inesachour/devops.git'
             }
@@ -60,18 +60,9 @@ pipeline {
                     
                 }
             }
-        }*/
+        }
         
-        /*stage('Install Azure CLI') {
-            steps {
-                script {
-                    // Install Azure CLI inside the Jenkins container
-                    sh 'curl -sL https://aka.ms/InstallAzureCLIDeb | bash'
-                }
-            }
-        }*/
-        
-        stage('Login to Azure with AzureServicePrincipal') {
+        /*stage('Login to Azure with AzureServicePrincipal') {
             steps {
                 script {
                     withCredentials([azureServicePrincipal(credentialsId: 'azure_service_principal', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
@@ -82,13 +73,14 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
         
         stage('Terraform') {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'azure_credentials',passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
                             sh 'az login -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET'
+                            sh 'terraform init'
                             sh 'terraform plan'
                             sh 'terraform apply --auto-approve'
                         }
@@ -106,6 +98,7 @@ pipeline {
                         sh 'az aks get-credentials --resource-group "devops_project_rg" --name "terraform-aks" --overwrite-existing'
                         sh 'kubectl apply -f backend-deployment.yaml'
                         sh 'kubectl apply -f backend-service.yaml'
+
                     }
                 }
             }
@@ -117,20 +110,12 @@ pipeline {
                     withCredentials([azureServicePrincipal(credentialsId: 'azure_service_principal', passwordVariable: 'AZURE_CLIENT_SECRET', usernameVariable: 'AZURE_CLIENT_ID')]) {
                         //sh 'az aks install-cli'
                         sh 'az aks get-credentials --resource-group "devops_project_rg" --name "terraform-aks" --overwrite-existing'
+                        sh 'kubectl delete service frontend && kubectl delete deployment frontend'
                         sh 'kubectl apply -f frontend-deployment.yaml'
                         sh 'kubectl apply -f frontend-service.yaml'
                     }
                 }
             }
         }
-
-        /*stage('Deploy to Kubernetes - Frontend') {
-            steps {
-                script {
-                    sh 'kubectl apply -f frontend-deployment.yaml'
-                    sh 'kubectl apply -f frontend-service.yaml'
-                }
-            }
-        }*/
     }
 }
