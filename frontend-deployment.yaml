@@ -17,3 +17,7 @@ spec:
           name: frontend
           ports:
             - containerPort: 3000
+        - image: inesachour/backend-image:latest
+          name: backend
+          ports:
+            - containerPort: 5000

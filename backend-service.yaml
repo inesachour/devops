@@ -10,4 +10,3 @@ spec:
   type: LoadBalancer
   selector:
     app: backend
-  loadBalancerIP: "20.82.224.110"
